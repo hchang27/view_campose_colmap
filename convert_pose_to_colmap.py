@@ -29,7 +29,6 @@ def save_colmap_files(camera_intrinsics, extrinsics_list, image_names, output_di
         os.remove(cameras_path)
     if os.path.exists(images_path):
         os.remove(images_path)
-    import ipdb; ipdb.set_trace()
     # Write cameras.txt (using PINHOLE model: parameters = fx, fy, cx, cy)
     with open(cameras_path, "w") as f:
         f.write("# CAMERA_ID MODEL WIDTH HEIGHT PARAMS[]\n")
@@ -40,9 +39,9 @@ def save_colmap_files(camera_intrinsics, extrinsics_list, image_names, output_di
         f.write("# IMAGE_ID QW QX QY QZ TX TY TZ CAMERA_ID IMAGE_NAME\n")
         for idx, (extrinsics, img_name) in enumerate(zip(extrinsics_list, image_names), start=1):
             # Convert camera-to-world to world-to-camera (COLMAP expects world-to-camera)
-            extrinsics_inv = np.linalg.inv(extrinsics)
-            R_matrix = extrinsics_inv[:3, :3]
-            t_vector = extrinsics_inv[:3, 3]
+            # extrinsics_inv = np.linalg.inv(extrinsics)
+            R_matrix = extrinsics[:3, :3]
+            t_vector = extrinsics[:3, 3]
             
             # Convert rotation matrix to quaternion; scipy returns (x, y, z, w)
             quat = R.from_matrix(R_matrix).as_quat()
@@ -137,6 +136,8 @@ def main():
         [-0.624695, 0, -0.78086, 0.655929],
         [0, 0, 0, 1]           
     ])]
+
+
     image_names = ["image1.jpg"] # This is to comply with colmap data
     
    
